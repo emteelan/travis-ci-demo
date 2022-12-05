@@ -1,0 +1,22 @@
+language: node_js
+
+os: linux
+
+jobs:
+  include:
+    - name: 'Automated API tests using Postman CLI'
+      arch: amd64
+      os: linux
+      dist: focal
+      node_js:
+        - 17
+      script:
+        # Install Postman CLI
+        - curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+        # Login using your Postman API Key
+        - postman login --with-api-key $POSTMAN_API_KEY
+        # Run your collections using Postman CLI
+        - postman collection run "${HOME}/postman/collections/Vehicle Status_d7e56735-5e28-4c17-bd85-daa09658f639.json" -e "16871416-c35b75f5-0e11-460c-bcf5-8c70b78f238b" --integration-id "128548-${TRAVIS_BUILD_ID}"
+        - postman collection run "${HOME}/postman/collections/Vehicle Status_36d9e1f0-b74b-45d2-85a0-2d3b67501028.json" -e "16871416-c35b75f5-0e11-460c-bcf5-8c70b78f238b" --integration-id "128548-${TRAVIS_BUILD_ID}"
+        # Lint your API using Postman CLI
+        - postman api lint --integration-id 128548
